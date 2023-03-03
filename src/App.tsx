@@ -1,34 +1,48 @@
+import { useState } from "react";
 import tree from "./tree.json";
 
 function App() {
   return (
     <div className="App">
       {tree.map((item, index) => (
-        <div key={index}>{renderFileOrFolder(item as any, true)}</div>
+        <div key={index}>{renderFileOrDir(item as any, true)}</div>
       ))}
     </div>
   );
 }
 
-type FileOrFolder =
-  | { type: "file"; name: string }
-  | { type: "directory"; name: string; contents: FileOrFolder[] };
+type FileObj = { type: "file"; name: string };
+type DirObj = { type: "directory"; name: string; contents: FileOrDir[] };
 
-function renderFileOrFolder(fileOrFolder: FileOrFolder, root?: boolean) {
-  const paddingLeft = 25 * (root ? 0 : 1);
+type FileOrDir = FileObj | DirObj;
 
-  if (fileOrFolder.type === "file") {
-    return <div style={{ paddingLeft }}>{fileOrFolder.name}</div>;
+function renderFileOrDir(fileOrDir: FileOrDir, isRoot?: boolean) {
+  const paddingLeft = 25 * (isRoot ? 0 : 1);
+
+  if (fileOrDir.type === "file") {
+    return <div style={{ paddingLeft }}>{fileOrDir.name}</div>;
   } else {
     return (
       <div style={{ paddingLeft }}>
-        <span>{fileOrFolder.name}</span>
-        {fileOrFolder.contents.map((item, index) => (
-          <div key={index}>{renderFileOrFolder(item)}</div>
-        ))}
+        <Dir dir={fileOrDir} />
       </div>
     );
   }
+}
+
+function Dir(props: { dir: DirObj }) {
+  const [isOpen, setIsOpen] = useState(true);
+
+  return (
+    <>
+      <button onClick={(_) => setIsOpen((o) => !o)}>{props.dir.name}</button>
+      {!isOpen
+        ? null
+        : props.dir.contents.map((item, index) => (
+            <div key={index}>{renderFileOrDir(item)}</div>
+          ))}
+    </>
+  );
 }
 
 export default App;
