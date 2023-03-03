@@ -1,0 +1,29 @@
+[
+  { "type": "file", "name": "index.html" },
+  { "type": "file", "name": "package-lock.json" },
+  { "type": "file", "name": "package.json" },
+  {
+    "type": "directory",
+    "name": "public",
+    "contents": [{ "type": "file", "name": "vite.svg" }]
+  },
+  {
+    "type": "directory",
+    "name": "src",
+    "contents": [
+      { "type": "file", "name": "App.css" },
+      { "type": "file", "name": "App.tsx" },
+      {
+        "type": "directory",
+        "name": "assets",
+        "contents": [{ "type": "file", "name": "react.svg" }]
+      },
+      { "type": "file", "name": "index.css" },
+      { "type": "file", "name": "main.tsx" },
+      { "type": "file", "name": "vite-env.d.ts" }
+    ]
+  },
+  { "type": "file", "name": "tsconfig.json" },
+  { "type": "file", "name": "tsconfig.node.json" },
+  { "type": "file", "name": "vite.config.ts" }
+]
