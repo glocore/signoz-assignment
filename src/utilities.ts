@@ -2,24 +2,28 @@ import { TreeItems, FlattenedItem, TreeItem } from "./types";
 
 /**
  * Recursively add the path as the `id` property for all items in the tree.
+ * Also sorts items alphabetically, directories first.
  */
-export function addIds(tree: TreeItems, parentPath = ""): TreeItems {
-  return tree.map((item) => {
-    const id = parentPath + "/" + item.name;
+export function prepareTree(tree: TreeItems, parentPath = ""): TreeItems {
+  return [...tree]
+    .sort()
+    .sort((i) => (i.type !== "directory" ? 1 : -1))
+    .map((item) => {
+      const id = parentPath + "/" + item.name;
 
-    if (item.type === "file") {
-      return {
-        ...item,
-        id,
-      };
-    } else {
-      return {
-        ...item,
-        id,
-        contents: addIds(item.contents, id),
-      };
-    }
-  });
+      if (item.type === "file") {
+        return {
+          ...item,
+          id,
+        };
+      } else {
+        return {
+          ...item,
+          id,
+          contents: prepareTree(item.contents, id),
+        };
+      }
+    });
 }
 
 export function flatten(

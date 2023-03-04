@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useState } from "react";
 import tree from "./tree.json";
 import { TreeItem, TreeItems } from "./types";
-import { addIds, moveItem } from "./utilities";
+import { prepareTree, moveItem } from "./utilities";
 
 const FileTreeContext = createContext<{
   fileTree: TreeItems;
@@ -9,7 +9,7 @@ const FileTreeContext = createContext<{
 }>({ fileTree: [], setFileTree() {} });
 
 function App() {
-  const [fileTree, setFileTree] = useState(addIds(tree as any, ""));
+  const [fileTree, setFileTree] = useState(prepareTree(tree as any, ""));
 
   return (
     <FileTreeContext.Provider value={{ fileTree, setFileTree }}>

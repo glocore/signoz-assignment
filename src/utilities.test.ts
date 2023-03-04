@@ -1,17 +1,17 @@
 import { describe, it, assert, expect, test } from "vitest";
 import fileTree from "./tree.json";
 import { TreeItems } from "./types";
-import { addIds, buildTree, flatten, moveItem } from "./utilities";
+import { prepareTree, buildTree, flatten, moveItem } from "./utilities";
 
-describe("addIds", () => {
+describe("prepareTree", () => {
   it("recursively adds ids to deeply nested items in a tree", () => {
-    const newTree = addIds(fileTree as TreeItems);
+    const newTree = prepareTree(fileTree as TreeItems);
     assert.isString(newTree[4].contents[2].contents[0].id);
   });
 });
 
 describe("flatten", () => {
-  const tree = addIds(fileTree as TreeItems);
+  const tree = prepareTree(fileTree as TreeItems);
 
   it("Flattens a deeply nested tree", () => {
     const flattenedTree = flatten(tree);
@@ -22,7 +22,7 @@ describe("flatten", () => {
 });
 
 describe("buildTree", () => {
-  const tree = addIds(fileTree as TreeItems);
+  const tree = prepareTree(fileTree as TreeItems);
 
   it("Builds back a nested tree from a flattened tree", () => {
     const flattenedTree = flatten(tree);
@@ -33,7 +33,7 @@ describe("buildTree", () => {
 });
 
 describe("moveItem", () => {
-  const tree = addIds(fileTree as TreeItems);
+  const tree = prepareTree(fileTree as TreeItems);
 
   it("moves a file into another directory", () => {
     const sourceId = tree.find((i) => i.type === "file")!.id;
