@@ -1,4 +1,10 @@
-import { createContext, useCallback, useContext, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useRef,
+  useState,
+} from "react";
 import tree from "./tree.json";
 import { TreeItem, TreeItems } from "./types";
 import { prepareTree, moveItem } from "./utilities";
@@ -68,16 +74,35 @@ function Dir(props: { dir: TreeItem }) {
     [fileTree, setFileTree]
   );
 
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleDragOver = useCallback(function handleDragOver(
+    e: React.DragEvent<HTMLElement>
+  ) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+
+    if (!timeoutRef.current) {
+      timeoutRef.current = setTimeout(() => {
+        setIsOpen(true);
+      }, 500);
+    }
+  },
+  []);
+
+  const handleDragLeave = useCallback(function handleDragLeave() {
+    clearTimeout(timeoutRef.current!);
+    timeoutRef.current = null;
+  }, []);
+
   return (
     <>
       <div
         draggable
         onDragStart={(e) => handleDragStart(e, props.dir.id)}
         onDrop={handleDrop}
-        onDragOver={(e) => {
-          e.preventDefault();
-          e.dataTransfer.dropEffect = "move";
-        }}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
       >
         <button
           onClick={(_) => setIsOpen((o) => !o)}
@@ -100,9 +125,3 @@ function handleDragStart(e: React.DragEvent<HTMLElement>, itemId: string) {
 }
 
 export default App;
-
-/**
- * TODOS:
- * 1. Sort files and folders alphabetically, folders first
- * 2. Open folder on dragover for 500ms
- */
