@@ -1,29 +1,48 @@
 import { TreeItems, FlattenedItem, TreeItem } from "./types";
 
 /**
- * Recursively add the path as the `id` property for all items in the tree.
- * Also sorts items alphabetically, directories first.
+ * Recursively sorts items alphabetically, directories first.
+ */
+function sortByNameAndType(arr: TreeItems) {
+  arr.sort(function (a: TreeItem, b: TreeItem) {
+    if (a.type === b.type) {
+      return a.name.localeCompare(b.name);
+    }
+    return a.type.localeCompare(b.type);
+  });
+
+  arr.forEach((i) => {
+    if (i.type === "directory" && i.contents.length > 0) {
+      sortByNameAndType(i.contents);
+    }
+  });
+
+  return arr;
+}
+
+/**
+ * Recursively adds the path as the `id` property for all items in the tree.
  */
 export function prepareTree(tree: TreeItems, parentPath = ""): TreeItems {
-  return [...tree]
-    .sort()
-    .sort((i) => (i.type !== "directory" ? 1 : -1))
-    .map((item) => {
-      const id = parentPath + "/" + item.name;
+  const cloned = structuredClone(tree) as TreeItems;
+  const sorted = sortByNameAndType(cloned);
 
-      if (item.type === "file") {
-        return {
-          ...item,
-          id,
-        };
-      } else {
-        return {
-          ...item,
-          id,
-          contents: prepareTree(item.contents, id),
-        };
-      }
-    });
+  return sorted.map((item) => {
+    const id = parentPath + "/" + item.name;
+
+    if (item.type === "file") {
+      return {
+        ...item,
+        id,
+      };
+    } else {
+      return {
+        ...item,
+        id,
+        contents: prepareTree(item.contents, id),
+      };
+    }
+  });
 }
 
 export function flatten(
@@ -61,7 +80,7 @@ export function buildTree(flattenedItems: FlattenedItem[]): TreeItems {
     parent.contents.push(item);
   }
 
-  return root.contents;
+  return sortByNameAndType(root.contents);
 }
 
 export function findItem(items: TreeItem[], itemId: string) {

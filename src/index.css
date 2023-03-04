@@ -24,15 +24,45 @@ h1 {
   line-height: 1.1;
 }
 
+button {
+  all: unset;
+  cursor: pointer;
+}
+
+.tree-item-contents {
+  display: flex;
+  align-items: center;
+  padding-right: 8px;
+}
+
+.tree-item {
+  cursor: pointer;
+}
+
+.tree-item:hover {
+  background-color: #4a4a4a;
+}
+
+.folder {
+  width: 100%;
+}
+
+.tree-icon {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  margin-left: 8px;
+  margin-right: 4px;
+  flex-shrink: 0;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
     background-color: #ffffff;
   }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
+
+  .tree-item:hover {
+    background-color: #eeeeee;
   }
 }

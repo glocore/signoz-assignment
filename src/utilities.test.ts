@@ -6,7 +6,7 @@ import { prepareTree, buildTree, flatten, moveItem } from "./utilities";
 describe("prepareTree", () => {
   it("recursively adds ids to deeply nested items in a tree", () => {
     const newTree = prepareTree(fileTree as TreeItems);
-    assert.isString(newTree[4].contents[2].contents[0].id);
+    assert.isString(newTree[1].contents[0].contents[0].id);
   });
 });
 
@@ -28,7 +28,7 @@ describe("buildTree", () => {
     const flattenedTree = flatten(tree);
     const nestedTree = buildTree(flattenedTree);
 
-    assert.isString(nestedTree[4].contents[2].contents[0].id);
+    assert.isString(nestedTree[1].contents[0].contents[0].id);
   });
 });
 
